@@ -1,7 +1,7 @@
 'use client';
 
 import { useRouter, useSearchParams } from 'next/navigation';
-import { useState, useRef, useEffect, useCallback } from 'react';
+import { useState, useRef, useEffect, useCallback, Suspense } from 'react';
 import { Document, Page, pdfjs } from 'react-pdf';
 import 'react-pdf/dist/esm/Page/AnnotationLayer.css';
 import 'react-pdf/dist/esm/Page/TextLayer.css';
@@ -9,7 +9,7 @@ import 'react-pdf/dist/esm/Page/TextLayer.css';
 
 pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.mjs`;
 
-export default function ViewPDF() {
+function PDFViewer() {
   const searchParams = useSearchParams();
   const url = searchParams.get('url');
   const router = useRouter();
@@ -501,5 +501,13 @@ export default function ViewPDF() {
         </div>
       )}
     </div>
+  );
+}
+
+export default function ViewPDF() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <PDFViewer />
+    </Suspense>
   );
 }
